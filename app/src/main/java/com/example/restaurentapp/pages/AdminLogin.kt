@@ -17,6 +17,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.DividerDefaults.color
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,7 +48,7 @@ fun AdminLogin(modifier: Modifier = Modifier,navController: NavController,authVi
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(20.dp).clip(RoundedCornerShape(16.dp)).background(Color.LightGray) ,
+            modifier = Modifier.fillMaxWidth().padding(20.dp).clip(RoundedCornerShape(35.dp)).background(Color.LightGray) ,
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -93,6 +94,9 @@ fun AdminLogin(modifier: Modifier = Modifier,navController: NavController,authVi
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
+            TextButton(onClick = {navController.navigate("AdminSignUp")}) {
+                Text(text="goto admin page")
+            }
 
         }
     }
