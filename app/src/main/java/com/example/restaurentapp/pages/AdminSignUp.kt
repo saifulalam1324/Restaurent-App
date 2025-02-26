@@ -95,6 +95,7 @@ fun AdminSignUp(modifier: Modifier = Modifier,navController: NavController,authV
             Spacer(modifier = Modifier.height(10.dp))
             Button(modifier = Modifier.fillMaxWidth(.5f)
                 ,onClick = {
+                    authViewModel.signup(Email,Password)
                     if(Email.isNotEmpty() && Password.isNotEmpty()){
                         Toast.makeText(context,"Welcome To AdminPanel", Toast.LENGTH_LONG).show()
 
