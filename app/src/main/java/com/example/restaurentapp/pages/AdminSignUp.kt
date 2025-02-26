@@ -3,7 +3,6 @@ package com.example.restaurentapp.pages
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -46,7 +45,7 @@ fun AdminSignUp(modifier: Modifier = Modifier,navController: NavController,authV
 
     LaunchedEffect(authState.value) {
         when (authState.value) {
-            is AuthState.Authenticated -> navController.navigate("home")
+            is AuthState.Authenticated -> navController.navigate("HomePage")
             is AuthState.Error -> Toast.makeText(
                 context,
                 (authState.value as AuthState.Error).message, Toast.LENGTH_SHORT
@@ -97,7 +96,7 @@ fun AdminSignUp(modifier: Modifier = Modifier,navController: NavController,authV
                 ,onClick = {
                     authViewModel.signup(Email,Password)
                     if(Email.isNotEmpty() && Password.isNotEmpty()){
-                        Toast.makeText(context,"Welcome To AdminPanel", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context,"Successfully Added A New Admin", Toast.LENGTH_LONG).show()
 
                     }else{
                         Toast.makeText(context,"fill all the field", Toast.LENGTH_LONG).show()
