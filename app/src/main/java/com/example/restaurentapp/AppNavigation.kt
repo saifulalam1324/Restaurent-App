@@ -10,6 +10,7 @@ import com.example.restaurentapp.pages.AdminLogin
 import com.example.restaurentapp.pages.AdminSignUp
 import com.example.restaurentapp.pages.HomePage
 import com.example.restaurentapp.pages.LoginPage
+import com.example.restaurentapp.pages.adminHomepage
 
 @Composable
 fun Namvigation(modifier: Modifier = Modifier,authViewModel: AuthViewModel) {
@@ -29,6 +30,9 @@ fun Namvigation(modifier: Modifier = Modifier,authViewModel: AuthViewModel) {
         }
         composable("AdminSignUp"){
             AdminSignUp(modifier,navControler,authViewModel)
+        }
+        composable("adminHomepage"){
+            adminHomepage(modifier,navControler,authViewModel)
         }
     })
 }
