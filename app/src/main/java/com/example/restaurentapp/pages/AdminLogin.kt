@@ -97,7 +97,7 @@ fun AdminLogin(modifier: Modifier = Modifier,navController: NavController,authVi
                         Toast.makeText(context,"fill all the field", Toast.LENGTH_LONG).show()
                     }
 
-                }) {
+                },enabled = authState.value != AuthState.Loading) {
                 Text(text = "submit",
                 )
             }

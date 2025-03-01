@@ -102,7 +102,7 @@ fun AdminSignUp(modifier: Modifier = Modifier,navController: NavController,authV
                         Toast.makeText(context,"fill all the field", Toast.LENGTH_LONG).show()
                     }
 
-                }) {
+                },enabled = authState.value != AuthState.Loading) {
                 Text(text = "submit",
                 )
             }
