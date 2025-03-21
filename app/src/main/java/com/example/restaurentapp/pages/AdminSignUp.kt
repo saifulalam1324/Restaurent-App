@@ -33,83 +33,84 @@ import com.example.restaurentapp.AuthViewModel
 
 
 @Composable
-fun AdminSignUp(modifier: Modifier = Modifier,navController: NavController,authViewModel: AuthViewModel) {
-
-
-    var Email by remember { mutableStateOf("") }
-    var Password by remember { mutableStateOf("") }
-
+fun AdminSignUp(modifier: Modifier = Modifier, navController: NavController, authViewModel: AuthViewModel) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     val authState = authViewModel.authState.observeAsState()
     val context = LocalContext.current
 
     LaunchedEffect(authState.value) {
         when (authState.value) {
-            is AuthState.Authenticated -> navController.navigate("HomePage")
-            is AuthState.Error -> Toast.makeText(
-                context,
-                (authState.value as AuthState.Error).message, Toast.LENGTH_SHORT
-            ).show()
-
+            is AuthState.Authenticated -> {
+                val role = (authState.value as AuthState.Authenticated).role
+                if (role == "Admin") {
+                    navController.navigate("adminHomepage")
+                } else {
+                    navController.navigate("userHomepage")
+                }
+            }
+            is AuthState.Error -> {
+                Toast.makeText(context, (authState.value as AuthState.Error).message, Toast.LENGTH_SHORT).show()
+            }
             else -> Unit
         }
     }
 
-
-    Column(modifier = Modifier.fillMaxSize(),
+    Column(
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(20.dp).clip(RoundedCornerShape(16.dp)).background(Color.LightGray) ,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color.LightGray),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier =Modifier.padding(16.dp))
+            Spacer(modifier = Modifier.padding(16.dp))
             Text(text = "Add Admin", fontSize = 20.sp)
-            Spacer(modifier =Modifier.padding(6.dp))
+            Spacer(modifier = Modifier.padding(6.dp))
+
             OutlinedTextField(
-                value = Email,
-                onValueChange = {
-                    Email = it
-                },
-                label = {
-                    Text(text = "Table Code")
-                },
-                placeholder = { Text(text = "Enter Table Code") },
-                modifier = Modifier.fillMaxWidth(.9f),singleLine = true
+                value = email,
+                onValueChange = { email = it },
+                label = { Text(text = "Email") },
+                placeholder = { Text(text = "Enter Email") },
+                modifier = Modifier.fillMaxWidth(.9f),
+                singleLine = true
             )
-            Spacer(modifier =Modifier.padding(6.dp))
+            Spacer(modifier = Modifier.padding(6.dp))
+
             OutlinedTextField(
-                value = Password,
-                onValueChange = {
-                    Password = it
-                },
-                label = {
-                    Text(text = "Table Password")
-                },
-                placeholder = { Text(text = "Enter Table Password") },
-                modifier = Modifier.fillMaxWidth(.9f),singleLine = true
+                value = password,
+                onValueChange = { password = it },
+                label = { Text(text = "Password") },
+                placeholder = { Text(text = "Enter Password") },
+                modifier = Modifier.fillMaxWidth(.9f),
+                singleLine = true
             )
             Spacer(modifier = Modifier.height(10.dp))
-            Button(modifier = Modifier.fillMaxWidth(.5f)
-                ,onClick = {
-                    authViewModel.signup(Email,Password)
-                    if(Email.isNotEmpty() && Password.isNotEmpty()){
-                        Toast.makeText(context,"Successfully Added A New Admin", Toast.LENGTH_LONG).show()
 
-                    }else{
-                        Toast.makeText(context,"fill all the field", Toast.LENGTH_LONG).show()
+            Button(
+                modifier = Modifier.fillMaxWidth(.5f),
+                onClick = {
+                    if (email.isNotEmpty() && password.isNotEmpty()) {
+                        authViewModel.signup(email, password, isAdmin = true)  // Ensure Admin role is set
+                        Toast.makeText(context, "Successfully Added A New Admin", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(context, "Fill all the fields", Toast.LENGTH_LONG).show()
                     }
-
-                },enabled = authState.value != AuthState.Loading) {
-                Text(text = "submit",
-                )
+                },
+                enabled = authState.value != AuthState.Loading
+            ) {
+                Text(text = "Submit")
             }
-            Spacer(modifier = Modifier.height(16.dp))
 
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
-
-
 }
