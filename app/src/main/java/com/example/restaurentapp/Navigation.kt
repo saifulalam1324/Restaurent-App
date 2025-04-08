@@ -38,6 +38,5 @@ fun Navigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel) {
         composable("AddFood") {
             AddFood(modifier, navController, authViewModel, foodViewModel)
         }
-
     }
 }

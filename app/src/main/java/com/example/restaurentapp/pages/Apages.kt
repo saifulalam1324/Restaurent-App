@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.restaurentapp.Models.Order
+import com.example.restaurentapp.Models.UserModel
 import com.example.restaurentapp.ViewModels.AuthViewModel
 import com.example.restaurentapp.ViewModels.FoodViewModel
 
@@ -41,21 +42,23 @@ fun AddFood(
     var price by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf("Burger") }
     var showError by remember { mutableStateOf(false) }
-    val categories = listOf("Burger", "Pasta", "Fries", "Pizza")
+    val categories = listOf("Burger", "Pasta", "Fries", "Pizza", "Drinks")
 
+    // Wrap the content inside Column and apply scroll
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState())
+            .padding(16.dp,0.dp,16.dp,0.dp)
+            .verticalScroll(rememberScrollState()) // Scroll behavior enabled here
     ) {
+        // Title
         Text(
             text = "Add Food Item",
             style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 10.dp)
         )
 
-        // Food Name Field
+        // Food Name Input
         OutlinedTextField(
             value = foodName,
             onValueChange = { foodName = it },
@@ -69,7 +72,9 @@ fun AddFood(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // Price Input
         OutlinedTextField(
             value = price,
             onValueChange = {
@@ -92,6 +97,8 @@ fun AddFood(
         )
 
         Spacer(modifier = Modifier.height(16.dp))
+
+        // Category Selection
         Text(
             text = "Select Category:",
             style = MaterialTheme.typography.labelLarge,
@@ -120,6 +127,8 @@ fun AddFood(
         }
 
         Spacer(modifier = Modifier.height(24.dp))
+
+        // Add Food Item Button
         Button(
             onClick = {
                 showError = false
@@ -145,6 +154,7 @@ fun AddFood(
         }
     }
 }
+
 @Composable
 fun AdminOrderPanel(
     modifier: Modifier = Modifier,
@@ -161,6 +171,7 @@ fun AdminOrderPanel(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
+
         Column(modifier = Modifier
             .fillMaxSize()
             .padding(top = 130.dp, start = 16.dp, end = 16.dp)) {
@@ -253,10 +264,109 @@ fun AdminOrderPanel(
     }
 }
 
+
+
 @Composable
-fun Users() {
-    
+fun Users(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    authViewModel: AuthViewModel,
+    foodViewModel: FoodViewModel
+) {
+    var users by remember { mutableStateOf<List<UserModel>>(emptyList()) }
+    var ordersCount by remember { mutableStateOf<Map<String, Int>>(emptyMap()) }
+    var pendingOrdersCount by remember { mutableStateOf<Map<String, Int>>(emptyMap()) }
+
+    LaunchedEffect(Unit) {
+        // Fetch users from the database
+        foodViewModel.fetchAllUsers { fetchedUsers ->
+            users = fetchedUsers
+            fetchedUsers.forEach { user ->
+                foodViewModel.getOrderCountForUser(user.userId) { count ->
+                    ordersCount = ordersCount + (user.userId to count)
+                }
+                foodViewModel.getPendingOrderCountForUser(user.userId) { pendingCount ->
+                    pendingOrdersCount = pendingOrdersCount + (user.userId to pendingCount)
+                }
+            }
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 130.dp, start = 16.dp, end = 16.dp)) {
+
+            Text(
+                text = "👥 Users",
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 60.dp, bottom = 16.dp)
+            )
+
+            // Display list of users
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(bottom = 100.dp)
+            ) {
+                items(users) { user ->
+                    // Fetch the order count and pending order count for each user
+                    val orderCount = ordersCount[user.userId] ?: 0
+                    val pendingCount = pendingOrdersCount[user.userId] ?: 0
+
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFF1565C0)),
+                        shape = RoundedCornerShape(12.dp),
+                        elevation = CardDefaults.cardElevation(6.dp)
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            // User email
+                            Text(
+                                text = "Email: ${user.email}",
+                                fontSize = 16.sp,
+                                color = Color.White
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            // User Role
+                            Text(
+                                text = "Role: ${if (user.isAdmin) "Admin" else "User"}",
+                                fontSize = 16.sp,
+                                color = Color.White
+                            )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            // Display total orders count
+                            Text(
+                                text = "Total Orders Placed: $orderCount",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+
+                            // Display pending orders count
+                            Text(
+                                text = "Pending Orders: $pendingCount",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFFFFCC80) // A different color for pending orders
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
+
+
+
+
+
 
 
 

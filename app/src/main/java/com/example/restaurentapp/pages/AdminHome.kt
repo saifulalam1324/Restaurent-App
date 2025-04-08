@@ -3,6 +3,9 @@ package com.example.restaurentapp.pages
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
@@ -35,10 +38,23 @@ fun AdminHome(
                     title = { Text("Restaurant App", color = Color.White) },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = Color(0xFF1E3A5F)
-                    )
+                    ),
+                    actions = {
+                        IconButton(onClick = {
+                            authViewModel.logout {
+                                navController.navigate("UserLogin") {
+                                    popUpTo("AdminHome") { inclusive = true }
+                                }
+                            }
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.ExitToApp, // Logout Icon
+                                contentDescription = "Logout",
+                                tint = Color.White
+                            )
+                        }
+                    }
                 )
-
-                // Top Row Icon Navigation
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -51,7 +67,7 @@ fun AdminHome(
                     TopNavItem("Users", Icons.Default.Group, selectedIndex == 2) {
                         selectedIndex = 1
                     }
-                    TopNavItem("Profile", Icons.Default.Person, selectedIndex == 3) {
+                    TopNavItem("Add Food", Icons.Default.Add, selectedIndex == 3) {  // Changed to + icon
                         selectedIndex = 2
                     }
                 }
@@ -68,6 +84,7 @@ fun AdminHome(
         )
     }
 }
+
 @Composable
 fun TopNavItem(
     label: String,
@@ -93,6 +110,7 @@ fun TopNavItem(
         )
     }
 }
+
 @Composable
 fun AdminContentScreen(
     modifier: Modifier = Modifier,
@@ -103,7 +121,7 @@ fun AdminContentScreen(
 ) {
     when (selectedIndex) {
         0 -> AdminOrderPanel(modifier, navController, authViewModel, foodViewModel)
-        1 -> Users()
+        1 -> Users(modifier,navController,authViewModel,foodViewModel)
         2 -> AddFood(modifier, navController, authViewModel, foodViewModel)
     }
 }

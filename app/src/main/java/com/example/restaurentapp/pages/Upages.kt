@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ExitToApp
@@ -107,7 +106,7 @@ fun FoodItemCard(item: FoodItem, onAddToCart: (FoodItem) -> Unit) {
                 onClick = { onAddToCart(item) },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF1565C0), // Normal blue
+                    containerColor = Color(0xFF1565C0),
                     contentColor = Color.White
                 )
             ) {
@@ -292,31 +291,10 @@ fun ProfilePage(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // Logout Icon
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 100.dp, end = 16.dp)
-                .align(Alignment.TopEnd),
-            horizontalArrangement = Arrangement.End
-        ) {
-            IconButton(onClick = {
-                authViewModel.logout {
-                    navController.navigate("UserLogin")
-                }
-            }) {
-                Icon(
-                    imageVector = Icons.Default.ExitToApp,
-                    contentDescription = "Logout",
-                    tint = Color(0xFF1976D2)
-                )
-            }
-        }
-
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .padding(top = 30.dp, start = 16.dp, end = 16.dp)
+                .padding(top = 0.dp, start = 16.dp, end = 16.dp)
         ) {
             Text(
                 text = "🛒 Your Orders",

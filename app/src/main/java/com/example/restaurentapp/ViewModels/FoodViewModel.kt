@@ -12,6 +12,7 @@ import kotlinx.coroutines.tasks.await
 import androidx.compose.runtime.*
 import com.example.restaurentapp.Models.CartItem
 import com.example.restaurentapp.Models.Order
+import com.example.restaurentapp.Models.UserModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -43,7 +44,7 @@ class FoodViewModel : ViewModel() {
     fun loadFoodItems() {
         viewModelScope.launch {
             try {
-                val categories = listOf("Burger", "Pizza", "Pasta", "Fries")
+                val categories = listOf("Burger", "Pizza", "Pasta", "Fries","Drinks")
                 val itemsMap = mutableMapOf<String, List<FoodItem>>()
 
                 for (category in categories) {
@@ -170,7 +171,7 @@ class FoodViewModel : ViewModel() {
     fun fetchAllOrders(onOrdersFetched: (List<Pair<String, Order>>) -> Unit) {
         FirebaseFirestore.getInstance()
             .collection("orders")
-            .whereEqualTo("status", false) // ✅ Only fetch pending orders
+            .whereEqualTo("status", false)
             .get()
             .addOnSuccessListener { result ->
                 val orders = result.documents.mapNotNull { doc ->
@@ -188,7 +189,7 @@ class FoodViewModel : ViewModel() {
                         val order = Order(
                             items = items,
                             totalPrice = doc.getDouble("totalPrice") ?: 0.0,
-                            status = false // 🔒 You already filtered by false, so hardcode
+                            status = false
                         )
 
                         orderId to order
@@ -201,8 +202,6 @@ class FoodViewModel : ViewModel() {
             }
     }
 
-
-
     fun updateOrderStatusToReady(orderId: String, onComplete: () -> Unit) {
         FirebaseFirestore.getInstance()
             .collection("orders")
@@ -210,7 +209,6 @@ class FoodViewModel : ViewModel() {
             .update("status", true)
             .addOnSuccessListener { onComplete() }
     }
-
     fun deleteOrder(orderId: String, onComplete: () -> Unit) {
         FirebaseFirestore.getInstance()
             .collection("orders")
@@ -218,6 +216,60 @@ class FoodViewModel : ViewModel() {
             .delete()
             .addOnSuccessListener { onComplete() }
     }
+    fun fetchAllUsers(onResult: (List<UserModel>) -> Unit) {
+        FirebaseFirestore.getInstance()
+            .collection("users")
+            .get()
+            .addOnSuccessListener { result ->
+                val users = result.map { document ->
+                    val email = document.getString("email") ?: ""
+                    val uid = document.id  // Here we use the Firestore document ID as the uid
+                    val isAdmin = document.getBoolean("isAdmin") ?: false
+                    val isUser = document.getBoolean("isUser") ?: true
+                    UserModel(email, uid, isAdmin, isUser)
+                }
+                onResult(users)
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "❌ Error fetching users", e)
+                onResult(emptyList())
+            }
+    }
+
+
+    fun getOrderCountForUser(userId: String, onResult: (Int) -> Unit) {
+        FirebaseFirestore.getInstance()
+            .collection("orders")
+            .whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener { result ->
+                // Count the number of orders for this user
+                val orderCount = result.size()
+                onResult(orderCount) // Pass the count to the callback function
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "❌ Error fetching order count", e)
+                onResult(0) // In case of failure, return 0
+            }
+    }
+    fun getPendingOrderCountForUser(userId: String, onResult: (Int) -> Unit) {
+        FirebaseFirestore.getInstance()
+            .collection("orders")
+            .whereEqualTo("userId", userId)
+            .whereEqualTo("status", false)
+            .get()
+            .addOnSuccessListener { result ->
+                val pendingOrderCount = result.size()
+                onResult(pendingOrderCount)
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "❌ Error fetching pending order count", e)
+                onResult(0)
+            }
+    }
+
+
+
 
 
 
