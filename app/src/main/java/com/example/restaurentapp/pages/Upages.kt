@@ -9,7 +9,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.RemoveCircle
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
@@ -72,7 +71,7 @@ fun FoodItemCard(item: FoodItem, onAddToCart: (FoodItem) -> Unit) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF1E3A5F)) // Dark sky blue
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF1E3A5F))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
@@ -173,7 +172,6 @@ fun CartPage(viewModel: FoodViewModel = viewModel()) {
                 .background(Color.White)
         ) {
             if (cartItems.isEmpty()) {
-                // Empty cart state
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -181,7 +179,6 @@ fun CartPage(viewModel: FoodViewModel = viewModel()) {
                     Text("Your cart is empty", color = Color.Black)
                 }
             } else {
-                // Cart list state
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(16.dp, 80.dp, 16.dp, 100.dp),

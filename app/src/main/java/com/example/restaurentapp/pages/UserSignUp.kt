@@ -16,10 +16,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,7 +50,7 @@ fun UserSignup(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White) // White background for the layout
+            .background(Color.White)
             .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -61,32 +59,30 @@ fun UserSignup(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Email Field with Blue Outline and Blue Label
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text(text = "Email", color = Color(0xFF1565C0)) }, // Blue label
+            label = { Text(text = "Email", color = Color(0xFF1565C0)) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF1565C0), // Blue border color when focused
-                unfocusedBorderColor = Color(0xFF1565C0) // Blue border color when not focused
+                focusedBorderColor = Color(0xFF1565C0),
+                unfocusedBorderColor = Color(0xFF1565C0)
             )
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Password Field with Blue Outline and Blue Label
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text(text = "Password", color = Color(0xFF1565C0)) }, // Blue label
+            label = { Text(text = "Password", color = Color(0xFF1565C0)) },
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
             colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF1565C0), // Blue border color when focused
-                unfocusedBorderColor = Color(0xFF1565C0) // Blue border color when not focused
+                focusedBorderColor = Color(0xFF1565C0),
+                unfocusedBorderColor = Color(0xFF1565C0)
             )
         )
 
@@ -101,8 +97,8 @@ fun UserSignup(
                     if (it) isUser = false
                 },
                 colors = CheckboxDefaults.colors(
-                    checkedColor = Color(0xFF1565C0), // Blue when checked
-                    uncheckedColor = Color(0xFF1565C0) // Blue when unchecked
+                    checkedColor = Color(0xFF1565C0),
+                    uncheckedColor = Color(0xFF1565C0)
                 )
             )
             Text("Manager")
@@ -116,8 +112,8 @@ fun UserSignup(
                     if (it) isAdmin = false
                 },
                 colors = CheckboxDefaults.colors(
-                    checkedColor = Color(0xFF1565C0), // Blue when checked
-                    uncheckedColor = Color(0xFF1565C0) // Blue when unchecked
+                    checkedColor = Color(0xFF1565C0),
+                    uncheckedColor = Color(0xFF1565C0)
                 )
             )
             Text("Table Boy")
@@ -130,10 +126,10 @@ fun UserSignup(
                 if (email.isNotEmpty() && password.isNotEmpty() && (isAdmin || isUser)) {
                     authViewModel.signup(email, password, isAdmin, isUser) { success, message ->
                         if (success) {
-                            Toast.makeText(context, "Signup Successful!", Toast.LENGTH_SHORT).show()
-                            navController.navigate("UserLogin")
+                            Toast.makeText(context, "Successfully! Added", Toast.LENGTH_SHORT).show()
+                            navController.navigate("AdminHome")
                         } else {
-                            Toast.makeText(context, message ?: "Signup Failed", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, message ?: "Failed", Toast.LENGTH_SHORT).show()
                         }
                     }
                 } else {
@@ -146,20 +142,7 @@ fun UserSignup(
                 contentColor = Color.White
             )
         ) {
-            Text("Sign Up")
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextButton(
-            onClick = {
-                navController.navigate("UserLogin")
-            },
-            colors = ButtonDefaults.textButtonColors(
-                contentColor = Color(0xFF1565C0) // Blue color for the TextButton
-            )
-        ) {
-            Text(text = "Already have an account? Login")
+            Text("Add")
         }
     }
 }

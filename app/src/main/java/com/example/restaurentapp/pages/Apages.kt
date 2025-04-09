@@ -25,7 +25,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.restaurentapp.Models.FoodItem
 import com.example.restaurentapp.Models.Order
 import com.example.restaurentapp.Models.UserModel
 import com.example.restaurentapp.ViewModels.AuthViewModel
@@ -42,7 +44,7 @@ fun AddFood(
     var price by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf("Burger") }
     var showError by remember { mutableStateOf(false) }
-    val categories = listOf("Burger", "Pasta", "Fries", "Pizza", "Drinks")
+    val categories = listOf("Burger","Sandwich", "Pasta","Wings","Sides","Shakes")
 
     Column(
         modifier = modifier
@@ -337,6 +339,95 @@ fun Users(
         }
     }
 }
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Food(viewModel: FoodViewModel = viewModel()) {
+    val foodItems = viewModel.foodItems
+
+    LaunchedEffect(Unit) {
+        viewModel.loadFoodItems()
+    }
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp, 160.dp, 16.dp, 60.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        foodItems.forEach { (category, items) ->
+            item {
+                Text(
+                    text = category,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+            }
+
+            items(items) { item ->
+                FoodItemDeleteCard(item = item, onDelete = { viewModel.deleteFoodItem(it) })
+            }
+        }
+    }
+}
+@Composable
+fun FoodItemDeleteCard(
+    item: FoodItem,
+    onDelete: (FoodItem) -> Unit
+) {
+    Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF1E3A5F))
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = item.name,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                    Text(
+                        text = item.category,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White.copy(alpha = 0.6f)
+                    )
+                }
+                Text(
+                    text = "${"%.2f".format(item.price)}",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(
+                onClick = { onDelete(item) },
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = Color.White
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete",
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Delete")
+            }
+        }
+    }
+}
+
+
 
 
 

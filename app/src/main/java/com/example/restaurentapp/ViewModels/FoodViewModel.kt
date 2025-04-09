@@ -43,7 +43,7 @@ class FoodViewModel : ViewModel() {
     fun loadFoodItems() {
         viewModelScope.launch {
             try {
-                val categories = listOf("Burger", "Pizza", "Pasta", "Fries","Drinks")
+                val categories = listOf("Burger","Sandwich", "Pasta","Wings","Sides","Shakes")
                 val itemsMap = mutableMapOf<String, List<FoodItem>>()
 
                 for (category in categories) {
@@ -72,9 +72,6 @@ class FoodViewModel : ViewModel() {
     private var _cartItems by mutableStateOf<List<CartItem>>(emptyList())
     val cartItems: List<CartItem> get() = _cartItems
 
-
-
-
     fun addToCart(item: FoodItem) {
         val existingItem = _cartItems.find { it.foodItem.id == item.id }
         if (existingItem != null) {
@@ -86,7 +83,7 @@ class FoodViewModel : ViewModel() {
                 }
             }
         } else {
-            _cartItems = _cartItems + CartItem(item) // Add new item
+            _cartItems = _cartItems + CartItem(item)
         }
     }
 
@@ -225,7 +222,7 @@ class FoodViewModel : ViewModel() {
                     val email = document.getString("email") ?: ""
                     val uid = document.id
                     val isAdmin = document.getBoolean("admin") ?: false
-                    val isUser = document.getBoolean("user") ?: false // 🔥 Updated field name
+                    val isUser = document.getBoolean("user") ?: false
 
                     if (isUser) {
                         UserModel(email, uid, isAdmin, isUser)
@@ -272,6 +269,27 @@ class FoodViewModel : ViewModel() {
                 onResult(0)
             }
     }
+
+
+    fun deleteFoodItem(item: FoodItem) {
+        val db = Firebase.firestore
+        db.collection("FoodItem")
+            .document(item.category)
+            .collection("items")
+            .document(item.id)
+            .delete()
+            .addOnSuccessListener {
+                Log.d("DELETE", "Deleted item: ${item.name}")
+                loadFoodItems()
+            }
+            .addOnFailureListener { e ->
+                Log.e("DELETE", "Error deleting item", e)
+            }
+    }
+
+
+
+
 
 
 
