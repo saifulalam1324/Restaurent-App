@@ -287,15 +287,6 @@ class FoodViewModel : ViewModel() {
             }
     }
 
-
-
-
-
-
-
-
-
-
 }
 
 

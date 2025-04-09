@@ -143,19 +143,6 @@ fun UserLogin(
         ) {
             Text("Login")
         }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextButton(
-            onClick = {
-                navController.navigate("UserSignup")
-            },
-            colors = ButtonDefaults.textButtonColors(
-                contentColor = Color(0xFF1565C0)
-            )
-        ) {
-            Text(text = "Don't have an account? Signup")
-        }
     }
 }
 

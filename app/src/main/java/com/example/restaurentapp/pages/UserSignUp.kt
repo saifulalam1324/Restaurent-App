@@ -55,7 +55,7 @@ fun UserSignup(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Signup", fontSize = 32.sp, fontWeight = FontWeight.Bold)
+        Text(text = "Add User", fontSize = 32.sp, fontWeight = FontWeight.Bold)
 
         Spacer(modifier = Modifier.height(16.dp))
 

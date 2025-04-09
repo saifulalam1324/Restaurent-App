@@ -203,7 +203,7 @@ fun AdminOrderPanel(
                                 color = Color.White
                             )
                             Text(
-                                text = if (order.status) "✅ Ready to Serve" else "⌛ Pending",
+                                text = if (order.status) "" else "⌛ Pending",
                                 fontWeight = FontWeight.Medium,
                                 fontSize = 14.sp,
                                 color = if (order.status) Color(0xFFB2FF59) else Color(0xFFFFCC80)
@@ -241,7 +241,7 @@ fun AdminOrderPanel(
                                     Icon(
                                         imageVector = Icons.Default.Delete,
                                         contentDescription = "Delete",
-                                        tint = Color.Red
+                                        tint = Color.White
                                     )
                                 }
                             }
@@ -412,6 +412,7 @@ fun FoodItemDeleteCard(
             Button(
                 onClick = { onDelete(item) },
                 colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF1565C0),
                     contentColor = Color.White
                 )
             ) {
