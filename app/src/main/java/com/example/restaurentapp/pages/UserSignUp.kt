@@ -92,20 +92,20 @@ fun UserSignup(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Role Selection with Blue Checkboxes
+
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = isAdmin,
                 onCheckedChange = {
                     isAdmin = it
-                    if (it) isUser = false // Ensuring only one role is selected
+                    if (it) isUser = false
                 },
                 colors = CheckboxDefaults.colors(
                     checkedColor = Color(0xFF1565C0), // Blue when checked
                     uncheckedColor = Color(0xFF1565C0) // Blue when unchecked
                 )
             )
-            Text("Admin")
+            Text("Manager")
 
             Spacer(modifier = Modifier.width(16.dp))
 
@@ -120,7 +120,7 @@ fun UserSignup(
                     uncheckedColor = Color(0xFF1565C0) // Blue when unchecked
                 )
             )
-            Text("User")
+            Text("Table Boy")
         }
 
         Spacer(modifier = Modifier.height(16.dp))

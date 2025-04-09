@@ -49,7 +49,7 @@ fun UserLogin(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White) // White background for the layout
+            .background(Color.White)
             .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -58,48 +58,43 @@ fun UserLogin(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Email Field with Blue Outline and Blue Label
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text(text = "Email", color = Color(0xFF1565C0)) }, // Blue label
+            label = { Text(text = "Email", color = Color(0xFF1565C0)) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF1565C0), // Blue border color when focused
-                unfocusedBorderColor = Color(0xFF1565C0) // Blue border color when not focused
+                focusedBorderColor = Color(0xFF1565C0),
+                unfocusedBorderColor = Color(0xFF1565C0)
             )
         )
 
         Spacer(modifier = Modifier.height(8.dp))
-
-        // Password Field with Blue Outline and Blue Label
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text(text = "Password", color = Color(0xFF1565C0)) }, // Blue label
+            label = { Text(text = "Password", color = Color(0xFF1565C0)) },
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
             colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF1565C0), // Blue border color when focused
-                unfocusedBorderColor = Color(0xFF1565C0) // Blue border color when not focused
+                focusedBorderColor = Color(0xFF1565C0),
+                unfocusedBorderColor = Color(0xFF1565C0)
             )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        // Role Selection with Blue Checkboxes
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
                 checked = isAdmin,
                 onCheckedChange = {
                     isAdmin = it
-                    if (it) isUser = false // Ensuring only one role is selected
+                    if (it) isUser = false
                 },
                 colors = CheckboxDefaults.colors(
-                    checkedColor = Color(0xFF1565C0), // Blue when checked
-                    uncheckedColor = Color(0xFF1565C0) // Blue when unchecked
+                    checkedColor = Color(0xFF1565C0),
+                    uncheckedColor = Color(0xFF1565C0)
                 )
             )
             Text("Manager")
@@ -113,8 +108,8 @@ fun UserLogin(
                     if (it) isAdmin = false
                 },
                 colors = CheckboxDefaults.colors(
-                    checkedColor = Color(0xFF1565C0), // Blue when checked
-                    uncheckedColor = Color(0xFF1565C0) // Blue when unchecked
+                    checkedColor = Color(0xFF1565C0),
+                    uncheckedColor = Color(0xFF1565C0)
                 )
             )
             Text("Table Boy")
@@ -142,8 +137,8 @@ fun UserLogin(
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF1565C0), // Blue button color
-                contentColor = Color.White // White text
+                containerColor = Color(0xFF1565C0),
+                contentColor = Color.White
             )
         ) {
             Text("Login")
@@ -156,7 +151,7 @@ fun UserLogin(
                 navController.navigate("UserSignup")
             },
             colors = ButtonDefaults.textButtonColors(
-                contentColor = Color(0xFF1565C0) // Blue color for the TextButton
+                contentColor = Color(0xFF1565C0)
             )
         ) {
             Text(text = "Don't have an account? Signup")

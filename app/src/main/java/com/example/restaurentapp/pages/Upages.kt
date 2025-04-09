@@ -123,8 +123,6 @@ fun FoodItemCard(item: FoodItem, onAddToCart: (FoodItem) -> Unit) {
 }
 
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartPage(viewModel: FoodViewModel = viewModel()) {
