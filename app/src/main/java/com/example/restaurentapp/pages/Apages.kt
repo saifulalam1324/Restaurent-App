@@ -154,7 +154,7 @@ fun AdminOrderPanel(
     authViewModel: AuthViewModel,
     foodViewModel: FoodViewModel
 ) {
-    var orders by remember { mutableStateOf<List<Pair<String, Order>>>(emptyList()) }
+    var orders by remember { mutableStateOf<List<Triple<String, Order, String>>>(emptyList()) }
 
     LaunchedEffect(Unit) {
         foodViewModel.fetchAllOrders { fetchedOrders ->
@@ -164,9 +164,11 @@ fun AdminOrderPanel(
 
     Box(modifier = Modifier.fillMaxSize()) {
 
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 130.dp, start = 16.dp, end = 16.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 130.dp, start = 16.dp, end = 16.dp)
+        ) {
             Text(
                 text = "🧾Orders",
                 fontSize = 22.sp,
@@ -179,7 +181,7 @@ fun AdminOrderPanel(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(bottom = 100.dp)
             ) {
-                items(orders) { (orderId, order) ->
+                items(orders) { (orderId, order, email) ->
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         colors = CardDefaults.cardColors(containerColor = Color(0xFF1565C0)),
@@ -187,6 +189,15 @@ fun AdminOrderPanel(
                         elevation = CardDefaults.cardElevation(6.dp)
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
+
+                            // 👇 Email display
+                            Text(
+                                text = "📧 $email",
+                                fontSize = 14.sp,
+                                color = Color.White.copy(alpha = 0.8f),
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+
                             order.items.forEach { (name, quantity) ->
                                 Text(
                                     text = "$name x$quantity",
@@ -196,12 +207,14 @@ fun AdminOrderPanel(
                             }
 
                             Spacer(modifier = Modifier.height(8.dp))
+
                             Text(
                                 text = "Total: ${order.totalPrice}",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp,
                                 color = Color.White
                             )
+
                             Text(
                                 text = if (order.status) "" else "⌛ Pending",
                                 fontWeight = FontWeight.Medium,
@@ -210,11 +223,11 @@ fun AdminOrderPanel(
                             )
 
                             Spacer(modifier = Modifier.height(8.dp))
+
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.End
                             ) {
-                                // Confirm Button
                                 if (!order.status) {
                                     IconButton(onClick = {
                                         foodViewModel.updateOrderStatusToReady(orderId) {

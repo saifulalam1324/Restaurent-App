@@ -11,6 +11,9 @@ import com.example.restaurentapp.ViewModels.FoodViewModel
 import com.example.restaurentapp.pages.AddFood
 import com.example.restaurentapp.pages.AdminHome
 import com.example.restaurentapp.pages.AdminOrderPanel
+import com.example.restaurentapp.pages.AllOrders
+import com.example.restaurentapp.pages.PendingOrders
+import com.example.restaurentapp.pages.ReadyOrders
 import com.example.restaurentapp.pages.UserHome
 import com.example.restaurentapp.pages.UserLogin
 import com.example.restaurentapp.pages.UserSignup
@@ -38,5 +41,15 @@ fun Navigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel) {
         composable("AddFood") {
             AddFood(modifier, navController, authViewModel, foodViewModel)
         }
+        composable("PendingOrders") {
+            PendingOrders(modifier,foodViewModel)
+        }
+        composable("ReadyOrders") {
+            ReadyOrders(modifier,foodViewModel)
+        }
+        composable("AllOrders") {
+            AllOrders(modifier,foodViewModel)
+        }
+
     }
 }

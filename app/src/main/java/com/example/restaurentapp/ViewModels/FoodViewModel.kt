@@ -14,6 +14,7 @@ import com.example.restaurentapp.Models.CartItem
 import com.example.restaurentapp.Models.Order
 import com.example.restaurentapp.Models.UserModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 
 
@@ -144,6 +145,7 @@ class FoodViewModel : ViewModel() {
 
         FirebaseFirestore.getInstance().collection("orders")
             .whereEqualTo("userId", userId)
+            .whereEqualTo("status", false)
             .get()
             .addOnSuccessListener { result ->
                 val orders = result.map { doc ->
@@ -164,39 +166,122 @@ class FoodViewModel : ViewModel() {
                 onOrdersFetched(orders)
             }
     }
-    fun fetchAllOrders(onOrdersFetched: (List<Pair<String, Order>>) -> Unit) {
-        FirebaseFirestore.getInstance()
-            .collection("orders")
-            .whereEqualTo("status", false)
+    fun fetchUserOrdersDone(onOrdersFetched: (List<Order>) -> Unit) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        FirebaseFirestore.getInstance().collection("orders")
+            .whereEqualTo("userId", userId)
+            .whereEqualTo("status", true)
             .get()
             .addOnSuccessListener { result ->
-                val orders = result.documents.mapNotNull { doc ->
-                    val data = doc.data
-                    if (data != null) {
-                        val items = data
-                            .filterKeys { it != "userId" && it != "totalPrice" && it != "status" }
-                            .mapNotNull {
-                                val key = it.key
-                                val value = (it.value as? Long)?.toInt() ?: (it.value as? Int)
-                                if (value != null) key to value else null
-                            }
+                val orders = result.map { doc ->
+                    val items = doc.data
+                        .filterKeys { it != "userId" && it != "totalPrice" && it != "status" }
+                        .mapNotNull {
+                            val key = it.key
+                            val value = (it.value as? Long)?.toInt() ?: (it.value as? Int) ?: return@mapNotNull null
+                            key to value
+                        }
 
-                        val orderId = doc.id
-                        val order = Order(
-                            items = items,
-                            totalPrice = doc.getDouble("totalPrice") ?: 0.0,
-                            status = false
-                        )
-
-                        orderId to order
-                    } else null
+                    Order(
+                        items = items,
+                        totalPrice = doc.getDouble("totalPrice") ?: 0.0,
+                        status = doc.getBoolean("status") ?: false
+                    )
                 }
                 onOrdersFetched(orders)
             }
-            .addOnFailureListener { exception ->
-                Log.e("Firestore", "Error fetching orders", exception)
+    }
+    fun fetchUserOrdersAll(onOrdersFetched: (List<Order>) -> Unit) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        FirebaseFirestore.getInstance().collection("orders")
+            .whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener { result ->
+                val orders = result.map { doc ->
+                    val items = doc.data
+                        .filterKeys { it != "userId" && it != "totalPrice" && it != "status" }
+                        .mapNotNull {
+                            val key = it.key
+                            val value = (it.value as? Long)?.toInt() ?: (it.value as? Int) ?: return@mapNotNull null
+                            key to value
+                        }
+
+                    Order(
+                        items = items,
+                        totalPrice = doc.getDouble("totalPrice") ?: 0.0,
+                        status = doc.getBoolean("status") ?: false
+                    )
+                }
+                onOrdersFetched(orders)
             }
     }
+    fun fetchAllOrders(onOrdersFetched: (List<Triple<String, Order, String>>) -> Unit) {
+        val db = FirebaseFirestore.getInstance()
+
+        db.collection("orders")
+            .whereEqualTo("status", false)
+            .get()
+            .addOnSuccessListener { result ->
+                val ordersList = mutableListOf<Triple<String, Order, String>>()
+                val userIdList = mutableSetOf<String>()
+                val orderMap = mutableMapOf<String, Pair<Order, String>>() // orderId -> (Order, userId)
+                for (doc in result.documents) {
+                    val data = doc.data ?: continue
+                    val userId = data["userId"] as? String ?: continue
+
+                    val items = data
+                        .filterKeys { it != "userId" && it != "totalPrice" && it != "status" && it != "orderNumber" }
+                        .mapNotNull {
+                            val key = it.key
+                            val value = (it.value as? Long)?.toInt() ?: (it.value as? Int)
+                            if (value != null) key to value else null
+                        }
+
+                    val order = Order(
+                        items = items,
+                        totalPrice = data["totalPrice"] as? Double ?: 0.0,
+                        status = false
+                    )
+
+                    orderMap[doc.id] = order to userId
+                    userIdList.add(userId)
+                }
+                if (userIdList.isEmpty()) {
+                    onOrdersFetched(emptyList())
+                    return@addOnSuccessListener
+                }
+
+                db.collection("users")
+                    .whereIn(FieldPath.documentId(), userIdList.toList())
+                    .get()
+                    .addOnSuccessListener { usersSnapshot ->
+                        val userEmailMap = usersSnapshot.documents.associateBy(
+                            { it.id },
+                            { it.getString("email") ?: "Unknown Email" }
+                        )
+
+                        for ((orderId, pair) in orderMap) {
+                            val (order, userId) = pair
+                            val email = userEmailMap[userId] ?: "Unknown Email"
+                            ordersList.add(Triple(orderId, order, email))
+                        }
+
+                        onOrdersFetched(ordersList)
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("Firestore", "❌ Error fetching user emails", e)
+                        onOrdersFetched(emptyList())
+                    }
+
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "❌ Error fetching orders", e)
+                onOrdersFetched(emptyList())
+            }
+    }
+
 
     fun updateOrderStatusToReady(orderId: String, onComplete: () -> Unit) {
         FirebaseFirestore.getInstance()
