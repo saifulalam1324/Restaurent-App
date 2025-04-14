@@ -68,7 +68,6 @@ fun UserLogin(
                 unfocusedBorderColor = Color(0xFF1565C0)
             )
         )
-
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
             value = password,
@@ -82,7 +81,6 @@ fun UserLogin(
                 unfocusedBorderColor = Color(0xFF1565C0)
             )
         )
-
         Spacer(modifier = Modifier.height(16.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             Checkbox(
@@ -97,9 +95,7 @@ fun UserLogin(
                 )
             )
             Text("Manager")
-
             Spacer(modifier = Modifier.width(16.dp))
-
             Checkbox(
                 checked = isUser,
                 onCheckedChange = {
@@ -113,9 +109,7 @@ fun UserLogin(
             )
             Text("Table Boy")
         }
-
         Spacer(modifier = Modifier.height(16.dp))
-
         Button(
             onClick = {
                 if (email.isNotEmpty() && password.isNotEmpty() && (isAdmin || isUser)) {

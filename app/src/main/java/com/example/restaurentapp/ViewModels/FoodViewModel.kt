@@ -355,7 +355,6 @@ class FoodViewModel : ViewModel() {
             }
     }
 
-
     fun deleteFoodItem(item: FoodItem) {
         val db = Firebase.firestore
         db.collection("FoodItem")

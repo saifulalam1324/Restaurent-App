@@ -161,9 +161,7 @@ fun AdminOrderPanel(
             orders = fetchedOrders
         }
     }
-
     Box(modifier = Modifier.fillMaxSize()) {
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -356,11 +354,9 @@ fun Users(
 @Composable
 fun Food(viewModel: FoodViewModel = viewModel()) {
     val foodItems = viewModel.foodItems
-
     LaunchedEffect(Unit) {
         viewModel.loadFoodItems()
     }
-
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -377,7 +373,6 @@ fun Food(viewModel: FoodViewModel = viewModel()) {
                     modifier = Modifier.padding(top = 16.dp)
                 )
             }
-
             items(items) { item ->
                 FoodItemDeleteCard(item = item, onDelete = { viewModel.deleteFoodItem(it) })
             }
@@ -419,9 +414,7 @@ fun FoodItemDeleteCard(
                     color = Color.White
                 )
             }
-
             Spacer(modifier = Modifier.height(12.dp))
-
             Button(
                 onClick = { onDelete(item) },
                 colors = ButtonDefaults.buttonColors(

@@ -51,17 +51,15 @@ fun UserHome(
                     containerColor = Color(0xFF1E3A5F)
                 ),
                 actions = {
-                    // Logout Button
                     IconButton(onClick = {
                         authViewModel.logout {
-                            // Handle post-logout actions, like navigation to login page
                             navController.navigate("UserLogin") {
                                 popUpTo("UserHome") { inclusive = true }
                             }
                         }
                     }) {
                         Icon(
-                            imageVector = Icons.Default.ExitToApp, // Logout Icon
+                            imageVector = Icons.Default.ExitToApp,
                             contentDescription = "Logout",
                             tint = Color.White
                         )

@@ -1,13 +1,11 @@
 package com.example.restaurentapp.pages
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
@@ -42,11 +40,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 @Composable
 fun HomePage(viewModel: FoodViewModel = viewModel()) {
     val foodItems = viewModel.foodItems
-
     LaunchedEffect(Unit) {
         viewModel.loadFoodItems()
     }
-
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -63,15 +59,12 @@ fun HomePage(viewModel: FoodViewModel = viewModel()) {
                     modifier = Modifier.padding(top = 16.dp)
                 )
             }
-
             items(items) { item ->
                 FoodItemCard(item = item, onAddToCart = { viewModel.addToCart(it) })
             }
         }
     }
 }
-
-
 @Composable
 fun FoodItemCard(item: FoodItem, onAddToCart: (FoodItem) -> Unit) {
     Card(
@@ -104,9 +97,7 @@ fun FoodItemCard(item: FoodItem, onAddToCart: (FoodItem) -> Unit) {
                     color = Color.White
                 )
             }
-
             Spacer(modifier = Modifier.height(12.dp))
-
             Button(
                 onClick = { onAddToCart(item) },
                 modifier = Modifier.fillMaxWidth(),
@@ -126,7 +117,6 @@ fun FoodItemCard(item: FoodItem, onAddToCart: (FoodItem) -> Unit) {
         }
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

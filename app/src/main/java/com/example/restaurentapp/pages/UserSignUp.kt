@@ -1,6 +1,5 @@
 package com.example.restaurentapp.pages
 
-
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -33,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.restaurentapp.ViewModels.AuthViewModel
-
 
 @Composable
 fun UserSignup(

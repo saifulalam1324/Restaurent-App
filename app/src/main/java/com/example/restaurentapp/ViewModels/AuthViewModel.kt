@@ -10,7 +10,6 @@ import com.google.firebase.firestore.firestore
 class AuthViewModel : ViewModel() {
     private val auth = Firebase.auth
     private val firestore = Firebase.firestore
-
     fun login(
         email: String,
         password: String,
