@@ -1,6 +1,37 @@
-# My Android App
+# 🍽 Restaurant Management System
 
-This app is built using Kotlin and Jetpack Compose.</br>
-It is a basic restaurant management application designed to create a connection between the manager and the waiter.</br>
-The waiter takes orders from customers who come to dine at the restaurant and places those orders through the app. </br>
-Once the manager accepts the order, the food is prepared and marked as ready to serve.</br>
+A mobile app built with *Kotlin* to manage restaurant operations smoothly. The app allows *waiters* to place orders, and *managers* to handle orders, table management, and view reports.
+
+---
+
+## 📱 Features
+
+### 👤 Waiter Side:
+- 🔐 *Login* for Table boy/waiter
+- 📋 *Browse food menu* with prices
+- 📝 *Place orders*
+- 📝 *Add to cart*
+- 📝 *Quantity control*
+- 📝 *Pricing*
+- 🪑 *Table Base order tracking*
+- 📦 *Order summary before confirmation*
+
+### 🛠 Admin/Manager Side:
+- 🔐 *Manager login*
+- 📈 *View all waiters' orders*
+- 💰 *Manual bill processing*
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Android Studio
+- Kotlin
+- Firebase
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/saifulalam1324/Restaurent-App.git 
